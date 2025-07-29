@@ -31,6 +31,7 @@ Liste as principais funcionalidades do seu projeto.
 Liste as principais tecnologias, frameworks, bibliotecas e ferramentas que você usou.
 * Linguagens: Python 3.9
 * Framework: Streamlit
+* Tesseract: https://github.com/tesseract-ocr/tesseract/wiki
 * Bibliotecas importantes
 altair==5.5.0
 annotated-types==0.7.0
