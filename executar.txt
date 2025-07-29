@@ -1,1 +1,1 @@
-C:\Users\gomes>streamlit run Jupyter_Projects\PDFtoCSV\PDFtoCSV.py
+streamlit run Jupyter_Projects\PDFtoCSV\PDFtoCSV.py
