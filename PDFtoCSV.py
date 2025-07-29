@@ -17,12 +17,11 @@ try:
 
 # Se não encontrar (está rodando localmente), carrega do arquivo .env
 except (KeyError, FileNotFoundError):
-    from dotenv import load_dotenv
     load_dotenv()
     API_KEY = os.getenv("GOOGLE_API_KEY")
     
 # Configura a API uma única vez, se a chave foi encontrada
-if not API_KEY:
+if API_KEY is None or API_KEY == "":
     st.error("Chave da API do Google não configurada. Adicione-a nos Secrets do Streamlit.")
     st.stop()
 
@@ -50,7 +49,6 @@ def extract_text_from_image(image_file):
 def get_gemini_response(text, prompt):
     """Envia o texto extraído e um prompt para o Gemini e retorna a resposta."""
     try:
-        genai.configure(api_key=GOOGLE_API_KEY)
         model = genai.GenerativeModel('gemini-1.5-flash') # Ou 'gemini-pro'
         response = model.generate_content([prompt, text])
         return response.text
