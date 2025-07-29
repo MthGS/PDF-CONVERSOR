@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[5]:
-
 import streamlit as st
 import pandas as pd
 from PIL import Image
@@ -13,41 +8,8 @@ import os
 from dotenv import load_dotenv
 from io import StringIO # Usado para ler a string CSV no Pandas
 
-# --- Função para Carregar Dados do PostgreSQL ---
-# Usando o cache do Streamlit para otimizar o carregamento
-#@st.cache_data
-#def load_data():
-#    """
-#    Carrega os dados da tabela 'paises_info' do banco de dados PostgreSQL
-#    usando as credenciais armazenadas no st.secrets.
-#    """
-#    try:
-#        # Carrega as credenciais de forma segura
-#        db_creds = st.secrets["database"]
-#        db_uri = (
-#            f"postgresql://{db_creds['user']}:{db_creds['password']}@"
-#            f"{db_creds['host']}:{db_creds['port']}/{db_creds['database']}"
-#        )
-#        engine = create_engine(db_uri)
-#        query = "SELECT nome_comum, capital, populacao, area_km2, regiao, moeda_nome, moeda_codigo FROM paises_info ORDER BY nome_comum ASC;"
-#        df = pd.read_sql(query, engine)
-#        engine.dispose()
-#        return df
-#    except Exception as e:
-#        st.error(f"Erro ao carregar dados do PostgreSQL: {e}")
-#        st.error("Verifique se o arquivo .streamlit/secrets.toml está configurado corretamente e se o serviço do PostgreSQL está ativo.")
-#        return pd.DataFrame()
-
 # --- Configurações da Página ---
 st.set_page_config(layout="wide")
-
-#ANTIGA CHAMADA API
-# --- Carregando a API Key ---
-# Para desenvolvimento local com .env
-#load_dotenv() 
-# Para deploy no Streamlit Cloud, use st.secrets
-# GOOGLE_API_KEY = st.secrets["GOOGLE_API_KEY"]
-#GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # Tenta carregar a chave do Streamlit Secrets (ambiente de deploy)
 try:
@@ -55,16 +17,16 @@ try:
 
 # Se não encontrar (está rodando localmente), carrega do arquivo .env
 except (KeyError, FileNotFoundError):
+    from dotenv import load_dotenv
     load_dotenv()
     API_KEY = os.getenv("GOOGLE_API_KEY")
-
+    
 # Configura a API uma única vez, se a chave foi encontrada
-if API_KEY:
-    genai.configure(api_key=API_KEY)
-else:
-    # Mostra um erro claro se a chave não for encontrada em nenhum dos lugares
-    st.error("Chave da API do Google não configurada. Por favor, adicione-a nos Secrets do Streamlit ou em um arquivo .env local.")
-    st.stop() # Impede que o resto do app execute sem a chave
+if not API_KEY:
+    st.error("Chave da API do Google não configurada. Adicione-a nos Secrets do Streamlit.")
+    st.stop()
+
+genai.configure(api_key=API_KEY)
 
 # Se você instalou o Tesseract em um local não padrão no Windows
 pytesseract.pytesseract.tesseract_cmd = r'C:\Users\gomes\Jupyter_Projects\PDFtoCSV\TESSERACT\tesseract.exe'
@@ -168,9 +130,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-# In[ ]:
 
 
 
