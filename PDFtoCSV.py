@@ -27,9 +27,6 @@ if API_KEY is None or API_KEY == "":
 
 genai.configure(api_key=API_KEY)
 
-# Se você instalou o Tesseract em um local não padrão no Windows
-pytesseract.pytesseract.tesseract_cmd = r'C:\Users\gomes\Jupyter_Projects\PDFtoCSV\TESSERACT\tesseract.exe'
-
 # --- Funções de Extração e Conversão ---
 
 def extract_text_from_pdf(pdf_file):
