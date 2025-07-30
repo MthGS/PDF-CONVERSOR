@@ -8,14 +8,11 @@ import os
 from dotenv import load_dotenv
 from io import StringIO # Usado para ler a string CSV no Pandas
 
-# --- Configurações da Página ---
 st.set_page_config(layout="wide")
 
-# Tenta carregar a chave do Streamlit Secrets (ambiente de deploy)
 try:
     API_KEY = st.secrets["GOOGLE_API_KEY"]
 
-# Se não encontrar (está rodando localmente), carrega do arquivo .env
 except (KeyError, FileNotFoundError):
     load_dotenv()
     API_KEY = os.getenv("GOOGLE_API_KEY")
@@ -27,8 +24,7 @@ if API_KEY is None or API_KEY == "":
 
 genai.configure(api_key=API_KEY)
 
-# --- Funções de Extração e Conversão ---
-
+#Funções de Extração e Conversão
 def extract_text_from_pdf(pdf_file):
     """Extrai texto de um arquivo PDF."""
     pdf_reader = PyPDF2.PdfReader(pdf_file)
@@ -53,12 +49,11 @@ def get_gemini_response(text, prompt):
         st.error(f"Erro ao chamar a API do Gemini: {e}")
         return None
 
-# --- Layout Principal do Dashboard ---
 def main():
     st.title("🤖 Conversor Inteligente de Arquivos para CSV")
     st.markdown("Faça o upload de um arquivo **PDF** ou **Imagem** contendo dados tabulares e converta-o para CSV com a ajuda da IA.")
 
-    # Colunas para layout
+    #Colunas para layout
     col1, col2 = st.columns(2)
 
     with col1:
@@ -70,16 +65,15 @@ def main():
             if st.button("Converter para CSV", use_container_width=True, type="primary"):
                 with st.spinner('Processando o arquivo... Por favor, aguarde.'):
                     raw_text = ""
-                    # Verifica o tipo de arquivo e extrai o texto
+                    #Verifica o tipo de arquivo e extrai o texto
                     if uploaded_file.type == "application/pdf":
                         raw_text = extract_text_from_pdf(uploaded_file)
-                    else: # Imagem
+                    else: 
                         raw_text = extract_text_from_image(uploaded_file)
 
                     if raw_text:
                         #st.text_area("Texto Extraído (Bruto)", raw_text, height=200) # Opcional: mostrar texto bruto
 
-                        # Prompt para o Gemini
                         prompt = """
                         Você é um assistente especialista em análise de dados.
                         Sua tarefa é analisar o texto fornecido abaixo, que foi extraído de um documento.
@@ -107,7 +101,7 @@ def main():
         if 'csv_data' in st.session_state:
             csv_string = st.session_state['csv_data']
             try:
-                # Usa StringIO para que o pandas leia a string como se fosse um arquivo
+                #Usa StringIO para que o pandas leia a string como se fosse um arquivo
                 df = pd.read_csv(StringIO(csv_string))
                 st.dataframe(df)
                 
